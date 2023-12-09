@@ -15,4 +15,4 @@ def dist_to_z(node):
         steps += 1
     return steps
 
-print(lcm(*(dist_to_z(node) for node in filter(lambda node: node[-1] == 'A', maps.keys()))))
+print(lcm(*(dist_to_z(node) for node in maps.keys() if node[-1] == 'A')))
