@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from functools import partial
-from collections import defaultdict
-
 from sys import stdin, setrecursionlimit
 
 setrecursionlimit(60000)

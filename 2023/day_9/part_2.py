@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import re
-
 from sys import stdin
 
 readings = [[int(r) for r in line.split()] for line in stdin.readlines()]
