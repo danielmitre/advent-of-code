@@ -91,11 +91,3 @@ print(max(
     *(energise((x, len(layout[0]) - 1), '←') for x in range(rows)),
     *(energise((len(layout) - 1, y), '↑') for y in range(cols)),
 ))
-
-# energised = [['.' for _ in layout[0]] for _ in layout]
-# for (x, y), dir in visited:
-#     if energised[x][y] == '.':
-#         energised[x][y] = '#'
-
-# for line in energised:
-#     print(''.join(line))
