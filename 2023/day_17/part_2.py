@@ -4,40 +4,18 @@
 import heapq
 from sys import stdin
 
-DX = {
-    '→':  0,
-    '←':  0,
-    '↑': -1,
-    '↓':  1,
-}
-
-DY = {
-    '→':  1,
-    '←': -1,
-    '↑':  0,
-    '↓':  0,
-}
-
-TURNS = {
-    '→': '↑↓',
-    '←': '↑↓',
-    '↑': '←→',
-    '↓': '←→',
-}
+DX = { '→':  0, '←':  0, '↑': -1, '↓':  1 }
+DY = { '→':  1, '←': -1, '↑':  0, '↓':  0 }
+TURNS = { '→': '↑↓', '←': '↑↓', '↑': '←→', '↓': '←→' }
 
 def in_bounds(pos, heatmap) -> bool:
-    x, y = pos
-    if x < 0 or x >= len(heatmap):
+    if not 0 <= pos[0] < len(heatmap):
         return False
-    if y < 0 or y >= len(heatmap[0]):
-        return False
-    return True
+    return 0 <= pos[1] < len(heatmap[0])
 
 def dijkstra(dest, heatmap):
-    # dir counter, dir, pos
-    vis = set()
-
-    pq = []
+    vis = set() # streak, dir, pos
+    pq = [] # dist, streak, dir, pos
     heapq.heappush(pq, (0, 0, '↓', (0, 0)))
     heapq.heappush(pq, (0, 0, '→', (0, 0)))
 
@@ -45,6 +23,11 @@ def dijkstra(dest, heatmap):
         dist, dir_cnt, dir, pos = heapq.heappop(pq)
         x, y = pos
 
+        if not in_bounds(pos, heatmap):
+            continue
+
+        dist += heatmap[x][y]        
+        
         if pos == dest and dir_cnt >= 4:
             return dist
 
@@ -52,19 +35,15 @@ def dijkstra(dest, heatmap):
             continue
 
         vis.add((dir_cnt, dir, pos))
-        
+
         if dir_cnt < 10:
-            new_x, new_y = x + DX[dir], y + DY[dir]
-            if in_bounds((new_x, new_y), heatmap):
-                heapq.heappush(pq, (dist + heatmap[new_x][new_y], dir_cnt + 1, dir, (new_x, new_y)))
+            heapq.heappush(pq, (dist, dir_cnt + 1, dir, (x + DX[dir], y + DY[dir])))
         
         if dir_cnt >= 4:
             for new_dir in TURNS[dir]:
-                new_x, new_y = x + DX[new_dir], y + DY[new_dir]
-                if in_bounds((new_x, new_y), heatmap):
-                    heapq.heappush(pq, (dist + heatmap[new_x][new_y], 1, new_dir, (new_x, new_y)))
+                heapq.heappush(pq, (dist, 1, new_dir, (x + DX[new_dir], y + DY[new_dir])))
     
     return float('inf')
 
 heatmap = [list(map(int, line.strip())) for line in stdin.readlines()]
-print(dijkstra((len(heatmap) - 1, len(heatmap[0]) - 1), heatmap))
+print(dijkstra((len(heatmap) - 1, len(heatmap[0]) - 1), heatmap) - heatmap[0][0])
